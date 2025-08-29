@@ -58,23 +58,3 @@ Server can check origins, methods, and headers.
 
 
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
