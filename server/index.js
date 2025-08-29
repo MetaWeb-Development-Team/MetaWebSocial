@@ -1,8 +1,8 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import filesRoute from './routes/fileRoute.js';
-import cors from 'cors';
+import express from "express";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import filesRoute from "./routes/fileRoute.js";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
@@ -24,29 +24,27 @@ app.use(cors());
 // );
 
 //basic load page with content
-app.get('/', (req, res) => {
-    console.log(req)
-    return res.status(234).send('Hello World!')
+app.get("/", (req, res) => {
+  console.log(req);
+  return res.status(234).send("Hello World!");
 });
 
-
-
-app.use('/files', filesRoute);
-
-
-
+app.use("/files", filesRoute);
 
 //connect to the db
-mongoose.connect(process.env.MONGO_URI).then(() =>{
-    console.log('Connection to DB established')
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connection to DB established");
 
     //start the server on the port provided in .env file
     app.listen(process.env.PORT, () => {
-        console.log(`App is listening to port: ${process.env.PORT}`);
+      console.log(`App is listening to port: ${process.env.PORT}`);
     });
-}).catch((err) =>{
+  })
+  .catch((err) => {
     console.log(err);
-});
+  });
 
 //CORS Policy:
 /*
