@@ -8,9 +8,9 @@ const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Root element not found");
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>,
+   <React.StrictMode>
+      <BrowserRouter>
+         <App />
+      </BrowserRouter>
+   </React.StrictMode>,
 );

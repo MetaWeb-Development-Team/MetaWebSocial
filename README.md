@@ -48,6 +48,7 @@ npm install
 ```
 
 Additionally, you will need to connect the server to a mongoDB database using the .env file. To be more specific, you will need the .env to contain the variable MONGO_URI configured to your database with associated Username and Password.
+Please place your own .env file in /server/. location by default.
 
 ### Set the packages in the package.json file for the application run dev && deploy.
 

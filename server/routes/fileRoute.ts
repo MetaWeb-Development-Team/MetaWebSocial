@@ -1,110 +1,107 @@
-import express, { Request, Response } from "express";
-import { modelFile } from "../models/fileModel.js";
+import { Router, Request, Response } from "express";
+import { modelFile } from "../models/fileModel"; // adjust path as needed
+import { FileRequestBody } from "../interfaces/FileRequestBody";
 
-const router = express.Router();
+const router = Router();
 
-interface FileRequestBody {
-  filename: string;
-  filedata: string;
-}
-
-// route for save a new file in db
+// Create new file (POST)
 router.post(
-  "/",
-  async (req: Request<{}, {}, FileRequestBody>, res: Response) => {
-    try {
-      if (!req.body.filename || !req.body.filedata) {
-        return res.status(400).send({
-          message:
-            "Data received was incomplete. Data Addition Cancelled. Send all required fields: filename, filedata",
-        });
+   "/",
+   async (req: Request<{}, {}, FileRequestBody>, res: Response) => {
+      try {
+         if (!req.body.filename || !req.body.filedata) {
+            return res.status(400).send({
+               message:
+                  "Data received was incomplete. Data Addition Cancelled. Send all required fields: filename, filedata",
+            });
+         }
+
+         const newFile = {
+            filename: req.body.filename,
+            filedata: req.body.filedata,
+         };
+
+         const createdFile = await modelFile.create(newFile);
+
+         return res.status(201).send(createdFile);
+      } catch (err: any) {
+         console.log(err.message);
+         res.status(500).send({ message: err.message });
       }
-
-      const newFile = {
-        filename: req.body.filename,
-        filedata: req.body.filedata,
-      };
-
-      const newfile = await modelFile.create(newFile);
-
-      return res.status(201).send(newfile);
-    } catch (err: any) {
-      console.log(err.message);
-      res.status(500).send({ message: err.message });
-    }
-  },
+   },
 );
 
-// route for get all files from db
+// Get all files (GET)
 router.get("/", async (req: Request, res: Response) => {
-  try {
-    const listFiles = await modelFile.find({});
-
-    return res.status(200).json({
-      count: listFiles.length,
-      data: listFiles,
-    });
-  } catch (err: any) {
-    console.log(err.message);
-    res.status(500).send({ message: err.message });
-  }
+   try {
+      const listFiles = await modelFile.find({});
+      return res.status(200).json({
+         count: listFiles.length,
+         data: listFiles,
+      });
+   } catch (err: any) {
+      console.log(err.message);
+      res.status(500).send({ message: err.message });
+   }
 });
 
-// route to get file with given id
+// Get file by ID (GET)
 router.get("/:id", async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const listFiles = await modelFile.findById(id);
-
-    return res.status(200).json(listFiles);
-  } catch (err: any) {
-    console.log(err.message);
-    res.status(500).send({ message: err.message });
-  }
+   try {
+      const { id } = req.params;
+      const file = await modelFile.findById(id);
+      if (!file) {
+         return res.status(404).json({ message: "File not found" });
+      }
+      return res.status(200).json(file);
+   } catch (err: any) {
+      console.log(err.message);
+      res.status(500).send({ message: err.message });
+   }
 });
 
-// route to update data within the db
+// Update file by ID (PUT)
 router.put(
-  "/:id",
-  async (req: Request<{ id: string }, {}, FileRequestBody>, res: Response) => {
-    try {
-      if (!req.body.filename || !req.body.filedata) {
-        return res.status(400).send({
-          message:
-            "Data received was incomplete. Data Replacement Cancelled. Send all required fields: filename, filedata",
-        });
-      }
+   "/:id",
+   async (req: Request<{ id: string }, {}, FileRequestBody>, res: Response) => {
+      try {
+         if (!req.body.filename || !req.body.filedata) {
+            return res.status(400).send({
+               message:
+                  "Data received was incomplete. Data Replacement Cancelled. Send all required fields: filename, filedata",
+            });
+         }
 
+         const { id } = req.params;
+         const result = await modelFile.findByIdAndUpdate(id, req.body);
+
+         if (!result) {
+            return res.status(404).json({ message: "File not found" });
+         }
+
+         return res.status(200).send({ message: "File updated successfully" });
+      } catch (err: any) {
+         console.log(err.message);
+         res.status(500).send({ message: err.message });
+      }
+   },
+);
+
+// Delete file by ID (DELETE)
+router.delete("/:id", async (req: Request, res: Response) => {
+   try {
       const { id } = req.params;
-      const result = await modelFile.findByIdAndUpdate(id, req.body);
+      const result = await modelFile.findByIdAndDelete(id);
 
       if (!result) {
-        return res.status(404).json({ message: "File not found" });
+         return res.status(404).json({ message: "File not found" });
       }
 
-      return res.status(200).send({ message: "File updated successfully" });
-    } catch (err: any) {
+      return res.status(200).json({ message: "File deleted successfully" });
+   } catch (err: any) {
       console.log(err.message);
       res.status(500).send({ message: err.message });
-    }
-  },
-);
-
-// delete a file by id
-router.delete("/:id", async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const result = await modelFile.findByIdAndDelete(id);
-
-    if (!result) {
-      return res.status(404).json({ message: "File not found" });
-    }
-
-    return res.status(200).json({ message: "File deleted successfully" });
-  } catch (err: any) {
-    console.log(err.message);
-    res.status(500).send({ message: err.message });
-  }
+   }
 });
 
 export default router;

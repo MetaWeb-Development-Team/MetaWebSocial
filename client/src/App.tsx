@@ -6,21 +6,21 @@ import ShowFile from "./pages/ShowFile";
 import EditFile from "./pages/EditFile";
 import DeleteFile from "./pages/DeleteFile";
 
-const App: React.FC = () => {
-  const [count, setCount] = useState<number>(0);
-  return (
-    <>
-      <button onClick={() => setCount(count + 1)}>{count}</button>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/files/create" element={<CreateFile />} />
-        <Route path="/files/details/:id" element={<ShowFile />} />
-        <Route path="/files/edit/:id" element={<EditFile />} />
-        <Route path="/files/delete/:id" element={<DeleteFile />} />
-      </Routes>
-    </>
-  );
-};
+function App() {
+   const [count, setCount] = useState<number>(1);
+   return (
+      <>
+         <button onClick={() => setCount(count + 1)}>{count}</button>
+         <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/files/create" element={<CreateFile />} />
+            <Route path="/files/details/:id" element={<ShowFile />} />
+            <Route path="/files/edit/:id" element={<EditFile />} />
+            <Route path="/files/delete/:id" element={<DeleteFile />} />
+         </Routes>
+      </>
+   );
+}
 
 export default App;
 

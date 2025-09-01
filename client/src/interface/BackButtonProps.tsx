@@ -1,3 +1,3 @@
 export interface BackButtonProps {
-  destination?: string;
+   destination?: string;
 }

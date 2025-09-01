@@ -1,4 +1,4 @@
-export interface FileResponse {
+export interface FileRequestBody {
    filename: string;
    filedata: string;
 }
