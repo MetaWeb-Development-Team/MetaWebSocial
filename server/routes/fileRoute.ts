@@ -1,14 +1,10 @@
-import express, { Request, Response } from "express";
-import { modelFile } from "../models/fileModel";
+import { Router, Request, Response } from "express";
+import { modelFile } from "../models/fileModel"; // adjust path as needed
+import { FileRequestBody } from "../interfaces/FileRequestBody";
 
-const router = express.Router();
+const router = Router();
 
-interface FileRequestBody {
-   filename: string;
-   filedata: string;
-}
-
-// route for save a new file in db
+// Create new file (POST)
 router.post(
    "/",
    async (req: Request<{}, {}, FileRequestBody>, res: Response) => {
@@ -25,9 +21,9 @@ router.post(
             filedata: req.body.filedata,
          };
 
-         const newfile = await modelFile.create(newFile);
+         const createdFile = await modelFile.create(newFile);
 
-         return res.status(201).send(newfile);
+         return res.status(201).send(createdFile);
       } catch (err: any) {
          console.log(err.message);
          res.status(500).send({ message: err.message });
@@ -35,11 +31,10 @@ router.post(
    },
 );
 
-// route for get all files from db
+// Get all files (GET)
 router.get("/", async (req: Request, res: Response) => {
    try {
       const listFiles = await modelFile.find({});
-
       return res.status(200).json({
          count: listFiles.length,
          data: listFiles,
@@ -50,20 +45,22 @@ router.get("/", async (req: Request, res: Response) => {
    }
 });
 
-// route to get file with given id
+// Get file by ID (GET)
 router.get("/:id", async (req: Request, res: Response) => {
    try {
       const { id } = req.params;
-      const listFiles = await modelFile.findById(id);
-
-      return res.status(200).json(listFiles);
+      const file = await modelFile.findById(id);
+      if (!file) {
+         return res.status(404).json({ message: "File not found" });
+      }
+      return res.status(200).json(file);
    } catch (err: any) {
       console.log(err.message);
       res.status(500).send({ message: err.message });
    }
 });
 
-// route to update data within the db
+// Update file by ID (PUT)
 router.put(
    "/:id",
    async (req: Request<{ id: string }, {}, FileRequestBody>, res: Response) => {
@@ -90,7 +87,7 @@ router.put(
    },
 );
 
-// delete a file by id
+// Delete file by ID (DELETE)
 router.delete("/:id", async (req: Request, res: Response) => {
    try {
       const { id } = req.params;
