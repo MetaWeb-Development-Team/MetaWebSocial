@@ -17,7 +17,6 @@ const fileSchema: Schema<IFile> = new Schema(
    },
 );
 
-export const modelFile: Model<IFile> = mongoose.model<IFile>(
-   "Filename",
-   fileSchema,
-);
+const modelFile: Model<IFile> = mongoose.model<IFile>("Filename", fileSchema);
+
+export default modelFile;
