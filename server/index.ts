@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import filesRoute from "./routes/fileRoute.js";
@@ -11,20 +11,10 @@ const app = express();
 app.use(express.json());
 
 //Middleware to handle CORS policy
-//Style 1: Allow all origins with default of cors (*)
 app.use(cors());
 
-//style 2: Allow custom origins
-// app.use(
-//     cors({
-//         origin: 'http://localhost:5555',
-//         methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//         allowedHeaders: ['Content-Type'],
-//     })
-// );
-
 //basic load page with content
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   console.log(req);
   return res.status(234).send("Hello World!");
 });
@@ -33,7 +23,7 @@ app.use("/files", filesRoute);
 
 //connect to the db
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI as string)
   .then(() => {
     console.log("Connection to DB established");
 
@@ -42,17 +32,11 @@ mongoose
       console.log(`App is listening to port: ${process.env.PORT}`);
     });
   })
-  .catch((err) => {
+  .catch((err: Error) => {
     console.log(err);
   });
 
-//CORS Policy:
 /*
-
 Cross Origin Resource Sharing
-
 Server can check origins, methods, and headers.
-
-
-
 */
