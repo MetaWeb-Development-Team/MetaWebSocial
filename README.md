@@ -53,3 +53,7 @@ Please place your own .env file in /server/. location by default.
 ### Set the packages in the package.json file for the application run dev && deploy.
 
 Dev stage: npm run dev
+
+### Remember set up your test MONGO_URI in the test file before testing
+
+Test stage: npm run test
