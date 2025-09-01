@@ -6,8 +6,8 @@ import ShowFile from "./pages/ShowFile";
 import EditFile from "./pages/EditFile";
 import DeleteFile from "./pages/DeleteFile";
 
-const App: React.FC = () => {
-   const [count, setCount] = useState<number>(0);
+function App() {
+   const [count, setCount] = useState<number>(1);
    return (
       <>
          <button onClick={() => setCount(count + 1)}>{count}</button>
@@ -20,7 +20,7 @@ const App: React.FC = () => {
          </Routes>
       </>
    );
-};
+}
 
 export default App;
 
